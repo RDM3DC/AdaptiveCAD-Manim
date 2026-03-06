@@ -1,0 +1,4 @@
+manim>=0.18.0
+numpy>=1.24
+scikit-image>=0.20
+adaptivecad @ git+https://github.com/RDM3DC/AdaptiveCAD.git
