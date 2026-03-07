@@ -24,6 +24,7 @@ from .lattice_packing import (
     voronoi_energy,
 )
 from .famous import run_all as run_famous
+from .core import run_all as run_core
 from .egatl import (
     EGATLParams,
     EntropyParams,
@@ -68,4 +69,6 @@ __all__ = [
     "summarize_recovery",
     # Famous equations
     "run_famous",
+    # Core equations
+    "run_core",
 ]

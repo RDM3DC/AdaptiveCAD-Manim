@@ -16,6 +16,7 @@ Usage:
     python -m solver.cli ablation            # EGATL ablation comparison
     python -m solver.cli benchmark           # Run leaderboard equation benchmarks
     python -m solver.cli famous              # Run 14 famous equations (Phase-Lift)
+    python -m solver.cli core                # Run 14 canonical core equations
 """
 
 from __future__ import annotations
@@ -63,6 +64,7 @@ from .egatl import (
 )
 from .benchmarks import run_all as run_benchmarks
 from .famous import run_all as run_famous
+from .core import run_all as run_core
 
 
 def _hr():
@@ -288,6 +290,13 @@ def cmd_famous(args):
     run_famous(verbose=True)
 
 
+def cmd_core(args):
+    """Run all 14 canonical core equations."""
+    print("\n  Running 14 Canonical Core Equations...")
+    _hr()
+    run_core(verbose=True)
+
+
 def cmd_ablation(args):
     """Run EGATL ablation comparison."""
     nx = getattr(args, "nx", 6)
@@ -364,6 +373,7 @@ def repl():
 ║     ablation          EGATL ablation comparison   ║
 ║     benchmark         Leaderboard equation tests  ║
 ║     famous            14 Famous Equations (PL)    ║
+║     core              14 Core Equations            ║
 ║     quit / exit       Exit                        ║
 ╚══════════════════════════════════════════════════╝
 """)
@@ -452,9 +462,12 @@ def repl():
         elif cmd == "famous":
             cmd_famous(args)
 
+        elif cmd == "core":
+            cmd_core(args)
+
         else:
             print(f"  Unknown command: {cmd}")
-            print("  Try: seeds, knot, hopf, energy, pack, egatl, chern, ablation, benchmark, famous, quit")
+            print("  Try: seeds, knot, hopf, energy, pack, egatl, chern, ablation, benchmark, famous, core, quit")
 
 
 # ---- CLI entry point -------------------------------------------------------
@@ -538,6 +551,9 @@ def main():
     # famous
     sub.add_parser("famous", help="Run 14 famous equations (Phase-Lift)")
 
+    # core
+    sub.add_parser("core", help="Run 14 canonical core equations")
+
     args = parser.parse_args()
     cmd = args.command
 
@@ -561,6 +577,8 @@ def main():
         cmd_benchmark(args)
     elif cmd == "famous":
         cmd_famous(args)
+    elif cmd == "core":
+        cmd_core(args)
     else:
         repl()
 
