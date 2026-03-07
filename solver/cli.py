@@ -14,6 +14,7 @@ Usage:
     python -m solver.cli egatl               # EGATL simulation (6×6 QWZ)
     python -m solver.cli chern               # Chern number sweep
     python -m solver.cli ablation            # EGATL ablation comparison
+    python -m solver.cli benchmark           # Run leaderboard equation benchmarks
 """
 
 from __future__ import annotations
@@ -59,6 +60,7 @@ from .egatl import (
     boundary_current_fraction,
     top_edge_fraction,
 )
+from .benchmarks import run_all as run_benchmarks
 
 
 def _hr():
@@ -270,6 +272,13 @@ def cmd_chern(args):
     _hr()
 
 
+def cmd_benchmark(args):
+    """Run leaderboard equation benchmarks."""
+    print("\n  Running TopEquations leaderboard benchmarks...")
+    _hr()
+    run_benchmarks(verbose=True)
+
+
 def cmd_ablation(args):
     """Run EGATL ablation comparison."""
     nx = getattr(args, "nx", 6)
@@ -344,6 +353,7 @@ def repl():
 ║     egatl [nx] [ny]   EGATL block simulation      ║
 ║     chern [mass]      QWZ Chern number            ║
 ║     ablation          EGATL ablation comparison   ║
+║     benchmark         Leaderboard equation tests  ║
 ║     quit / exit       Exit                        ║
 ╚══════════════════════════════════════════════════╝
 """)
@@ -426,9 +436,12 @@ def repl():
             args.damage_time = 10.0
             cmd_ablation(args)
 
+        elif cmd == "benchmark":
+            cmd_benchmark(args)
+
         else:
             print(f"  Unknown command: {cmd}")
-            print("  Try: seeds, knot, hopf, energy, pack, egatl, chern, ablation, quit")
+            print("  Try: seeds, knot, hopf, energy, pack, egatl, chern, ablation, benchmark, quit")
 
 
 # ---- CLI entry point -------------------------------------------------------
@@ -506,6 +519,9 @@ def main():
     p_abl.add_argument("--seed", type=int, default=0)
     p_abl.add_argument("--damage-time", type=float, default=10.0)
 
+    # benchmark
+    sub.add_parser("benchmark", help="Run leaderboard equation benchmarks")
+
     args = parser.parse_args()
     cmd = args.command
 
@@ -525,6 +541,8 @@ def main():
         cmd_chern(args)
     elif cmd == "ablation":
         cmd_ablation(args)
+    elif cmd == "benchmark":
+        cmd_benchmark(args)
     else:
         repl()
 
