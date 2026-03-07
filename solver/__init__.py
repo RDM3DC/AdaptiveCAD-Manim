@@ -25,6 +25,7 @@ from .lattice_packing import (
 )
 from .famous import run_all as run_famous
 from .core import run_all as run_core
+from .cosmo import run_all as run_cosmo
 from .egatl import (
     EGATLParams,
     EntropyParams,
@@ -71,4 +72,6 @@ __all__ = [
     "run_famous",
     # Core equations
     "run_core",
+    # Cosmological calculator
+    "run_cosmo",
 ]

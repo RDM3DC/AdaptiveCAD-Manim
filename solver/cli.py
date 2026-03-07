@@ -17,6 +17,7 @@ Usage:
     python -m solver.cli benchmark           # Run leaderboard equation benchmarks
     python -m solver.cli famous              # Run 14 famous equations (Phase-Lift)
     python -m solver.cli core                # Run 14 canonical core equations
+    python -m solver.cli cosmo               # Cosmological calculator (MoM-z14 etc.)
 """
 
 from __future__ import annotations
@@ -65,6 +66,7 @@ from .egatl import (
 from .benchmarks import run_all as run_benchmarks
 from .famous import run_all as run_famous
 from .core import run_all as run_core
+from .cosmo import run_all as run_cosmo
 
 
 def _hr():
@@ -297,6 +299,13 @@ def cmd_core(args):
     run_core(verbose=True)
 
 
+def cmd_cosmo(args):
+    """Run cosmological calculator for high-z galaxies."""
+    print("\n  Running Cosmological Calculator (Planck 2018 ΛCDM)...")
+    _hr()
+    run_cosmo(verbose=True)
+
+
 def cmd_ablation(args):
     """Run EGATL ablation comparison."""
     nx = getattr(args, "nx", 6)
@@ -374,6 +383,7 @@ def repl():
 ║     benchmark         Leaderboard equation tests  ║
 ║     famous            14 Famous Equations (PL)    ║
 ║     core              14 Core Equations            ║
+║     cosmo             Cosmological calculator      ║
 ║     quit / exit       Exit                        ║
 ╚══════════════════════════════════════════════════╝
 """)
@@ -465,9 +475,12 @@ def repl():
         elif cmd == "core":
             cmd_core(args)
 
+        elif cmd == "cosmo":
+            cmd_cosmo(args)
+
         else:
             print(f"  Unknown command: {cmd}")
-            print("  Try: seeds, knot, hopf, energy, pack, egatl, chern, ablation, benchmark, famous, core, quit")
+            print("  Try: seeds, knot, hopf, energy, pack, egatl, chern, ablation, benchmark, famous, core, cosmo, quit")
 
 
 # ---- CLI entry point -------------------------------------------------------
@@ -554,6 +567,9 @@ def main():
     # core
     sub.add_parser("core", help="Run 14 canonical core equations")
 
+    # cosmo
+    sub.add_parser("cosmo", help="Cosmological calculator (high-z galaxies)")
+
     args = parser.parse_args()
     cmd = args.command
 
@@ -579,6 +595,8 @@ def main():
         cmd_famous(args)
     elif cmd == "core":
         cmd_core(args)
+    elif cmd == "cosmo":
+        cmd_cosmo(args)
     else:
         repl()
 
