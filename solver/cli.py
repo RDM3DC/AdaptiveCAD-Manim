@@ -18,6 +18,7 @@ Usage:
     python -m solver.cli famous              # Run 14 famous equations (Phase-Lift)
     python -m solver.cli core                # Run 14 canonical core equations
     python -m solver.cli cosmo               # Cosmological calculator (MoM-z14 etc.)
+    python -m solver.cli cmb                 # CMB evidence analysis
 """
 
 from __future__ import annotations
@@ -67,6 +68,7 @@ from .benchmarks import run_all as run_benchmarks
 from .famous import run_all as run_famous
 from .core import run_all as run_core
 from .cosmo import run_all as run_cosmo
+from .cmb import run_all as run_cmb
 
 
 def _hr():
@@ -304,6 +306,13 @@ def cmd_cosmo(args):
     print("\n  Running Cosmological Calculator (Planck 2018 ΛCDM)...")
     _hr()
     run_cosmo(verbose=True)
+
+
+def cmd_cmb(args):
+    """Run CMB evidence analysis."""
+    print("\n  Running CMB Evidence Analysis...")
+    _hr()
+    run_cmb(verbose=True)
 
 
 def cmd_ablation(args):
@@ -570,6 +579,9 @@ def main():
     # cosmo
     sub.add_parser("cosmo", help="Cosmological calculator (high-z galaxies)")
 
+    # cmb
+    sub.add_parser("cmb", help="CMB evidence analysis")
+
     args = parser.parse_args()
     cmd = args.command
 
@@ -597,6 +609,8 @@ def main():
         cmd_core(args)
     elif cmd == "cosmo":
         cmd_cosmo(args)
+    elif cmd == "cmb":
+        cmd_cmb(args)
     else:
         repl()
 
