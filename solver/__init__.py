@@ -23,6 +23,7 @@ from .lattice_packing import (
     sphere_packing_density,
     voronoi_energy,
 )
+from .famous import run_all as run_famous
 from .egatl import (
     EGATLParams,
     EntropyParams,
@@ -65,4 +66,6 @@ __all__ = [
     "run_recovery_protocol",
     "compare_ablations",
     "summarize_recovery",
+    # Famous equations
+    "run_famous",
 ]
