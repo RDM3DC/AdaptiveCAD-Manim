@@ -70,6 +70,12 @@ from .core import run_all as run_core
 from .cosmo import run_all as run_cosmo
 from .cmb import run_all as run_cmb
 
+from . import ssh as ssh_mod
+from . import scalar_flux as flux_mod
+from . import kitaev as kitaev_mod
+from . import haldane as haldane_mod
+from . import rice_mele as rice_mele_mod
+
 
 def _hr():
     print("─" * 60)
@@ -315,6 +321,161 @@ def cmd_cmb(args):
     run_cmb(verbose=True)
 
 
+def cmd_ssh(args):
+    """Run SSH scalar chain recovery protocol."""
+    n_cells = getattr(args, "n_cells", 20)
+    T = getattr(args, "T", 60.0)
+    seed = getattr(args, "seed", 0)
+    ablation = getattr(args, "ablation", False)
+
+    print(f"\n  SSH Scalar Chain Benchmark")
+    _hr()
+    print(f"  n_cells={n_cells}  T={T}")
+
+    if ablation:
+        results = ssh_mod.compare_ablations(n_cells=n_cells, T=T, seed=seed)
+        for name, (bench, out, summ) in results.items():
+            print(f"\n  [{name}]")
+            print(f"    Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+            print(f"    Dimerization pre/post: {summ['dimerization_pre']:.4f} → {summ['dimerization_post']:.4f}")
+            print(f"    Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+            print(f"    GMRES fails: {summ['gmres_fails']}")
+    else:
+        bench, out = ssh_mod.run_recovery_protocol(
+            n_cells=n_cells, T=T, seed=seed)
+        summ = ssh_mod.summarize_recovery(out, bench, damage_time=20.0)
+        print(f"  Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+        print(f"  Dimerization pre/post: {summ['dimerization_pre']:.4f} → {summ['dimerization_post']:.4f}")
+        print(f"  Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+    _hr()
+
+
+def cmd_flux(args):
+    """Run 2D scalar flux lattice recovery or Hofstadter sweep."""
+    nx = getattr(args, "nx", 8)
+    ny = getattr(args, "ny", 8)
+    T = getattr(args, "T", 80.0)
+    seed = getattr(args, "seed", 0)
+    sweep = getattr(args, "sweep", False)
+
+    print(f"\n  Scalar Flux Lattice Benchmark")
+    _hr()
+
+    if sweep:
+        print(f"  Hofstadter butterfly sweep ({nx}×{ny})")
+        result = flux_mod.hofstadter_sweep(nx=nx, ny=ny, n_alpha=21, seed=seed)
+        for i in range(len(result["alphas"])):
+            print(f"    α={result['alphas'][i]:.3f}  Yeff={result['Yeff_final'][i]:.4f}  S={result['S_final'][i]:.4f}")
+    else:
+        print(f"  Recovery protocol ({nx}×{ny})  T={T}")
+        bench, out = flux_mod.run_recovery_protocol(nx=nx, ny=ny, T=T, seed=seed)
+        summ = flux_mod.summarize_recovery(out, bench, damage_time=30.0)
+        print(f"  Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+        print(f"  Top-edge pre/post: {summ['top_edge_pre']:.4f} → {summ['top_edge_post']:.4f}")
+        print(f"  Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+    _hr()
+
+
+def cmd_kitaev(args):
+    """Run Kitaev chain Majorana benchmark."""
+    n_sites = getattr(args, "n_sites", 20)
+    T = getattr(args, "T", 60.0)
+    seed = getattr(args, "seed", 0)
+    ablation = getattr(args, "ablation", False)
+
+    print(f"\n  Kitaev Chain Benchmark (Majorana edge modes)")
+    _hr()
+    print(f"  n_sites={n_sites}  T={T}")
+
+    if ablation:
+        results = kitaev_mod.compare_ablations(n_sites=n_sites, T=T, seed=seed)
+        for name, (chain, out, summ) in results.items():
+            print(f"\n  [{name}]")
+            print(f"    Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+            print(f"    Edge ratio pre/post: {summ['edge_ratio_pre']:.4f} → {summ['edge_ratio_post']:.4f}")
+            print(f"    Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+            print(f"    GMRES fails: {summ['gmres_fails']}")
+    else:
+        chain, out = kitaev_mod.run_recovery_protocol(
+            n_sites=n_sites, T=T, seed=seed)
+        summ = kitaev_mod.summarize_recovery(out, chain, damage_time=20.0)
+        print(f"  Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+        print(f"  Edge ratio pre/post: {summ['edge_ratio_pre']:.4f} → {summ['edge_ratio_post']:.4f}")
+        print(f"  Topo gap: {summ.get('topo_gap', 'N/A')}")
+        print(f"  Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+    _hr()
+
+
+def cmd_haldane(args):
+    """Run Haldane honeycomb lattice benchmark."""
+    nx = getattr(args, "nx", 6)
+    ny = getattr(args, "ny", 6)
+    T = getattr(args, "T", 60.0)
+    seed = getattr(args, "seed", 0)
+    ablation = getattr(args, "ablation", False)
+
+    print(f"\n  Haldane Honeycomb Lattice Benchmark")
+    _hr()
+    print(f"  {nx}×{ny} unit cells  T={T}")
+
+    if ablation:
+        results = haldane_mod.compare_ablations(nx=nx, ny=ny, T=T, seed=seed)
+        for name, (bench, out, summ) in results.items():
+            print(f"\n  [{name}]")
+            print(f"    Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+            print(f"    Boundary pre/post: {summ['boundary_pre']:.4f} → {summ['boundary_post']:.4f}")
+            print(f"    NNN ratio pre/post: {summ['nnn_ratio_pre']:.4f} → {summ['nnn_ratio_post']:.4f}")
+            print(f"    Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+    else:
+        bench, out = haldane_mod.run_recovery_protocol(
+            nx=nx, ny=ny, T=T, seed=seed)
+        summ = haldane_mod.summarize_recovery(out, bench, damage_time=20.0)
+        print(f"  Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+        print(f"  Boundary pre/post: {summ['boundary_pre']:.4f} → {summ['boundary_post']:.4f}")
+        print(f"  NNN ratio pre/post: {summ['nnn_ratio_pre']:.4f} → {summ['nnn_ratio_post']:.4f}")
+        print(f"  Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+    _hr()
+
+
+def cmd_ricemele(args):
+    """Run Rice–Mele chain benchmark."""
+    n_cells = getattr(args, "n_cells", 20)
+    T = getattr(args, "T", 60.0)
+    seed = getattr(args, "seed", 0)
+    ablation = getattr(args, "ablation", False)
+    sweep = getattr(args, "sweep", False)
+
+    print(f"\n  Rice–Mele Chain Benchmark")
+    _hr()
+
+    if sweep:
+        print(f"  Zak phase sweep (n_cells={n_cells})")
+        result = rice_mele_mod.zak_phase_sweep(n_cells=n_cells, seed=seed)
+        for i in range(len(result["angles"])):
+            ang = result["angles"][i]
+            print(f"    θ={ang:.3f}  Yeff={result['Yeff_final'][i]:.4f}  "
+                  f"dim={result['dimerization'][i]:.4f}  "
+                  f"φ_imb={result['phase_imbalance'][i]:.4f}")
+    elif ablation:
+        results = rice_mele_mod.compare_ablations(n_cells=n_cells, T=T, seed=seed)
+        for name, (bench, out, summ) in results.items():
+            print(f"\n  [{name}]")
+            print(f"    Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+            print(f"    Dimerization pre/post: {summ['dimerization_pre']:.4f} → {summ['dimerization_post']:.4f}")
+            print(f"    Phase imbalance pre/post: {summ['phase_imbalance_pre']:.4f} → {summ['phase_imbalance_post']:.4f}")
+            print(f"    Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+    else:
+        print(f"  n_cells={n_cells}  T={T}")
+        bench, out = rice_mele_mod.run_recovery_protocol(
+            n_cells=n_cells, T=T, seed=seed)
+        summ = rice_mele_mod.summarize_recovery(out, bench, damage_time=20.0)
+        print(f"  Yeff recovery: {summ['Yeff_recovery_ratio']:.4f}")
+        print(f"  Dimerization pre/post: {summ['dimerization_pre']:.4f} → {summ['dimerization_post']:.4f}")
+        print(f"  Phase imbalance pre/post: {summ['phase_imbalance_pre']:.4f} → {summ['phase_imbalance_post']:.4f}")
+        print(f"  Final S={summ['final_S']:.3f}  π_a={summ['final_pi_a']:.3f}")
+    _hr()
+
+
 def cmd_ablation(args):
     """Run EGATL ablation comparison."""
     nx = getattr(args, "nx", 6)
@@ -389,10 +550,16 @@ def repl():
 ║     egatl [nx] [ny]   EGATL block simulation      ║
 ║     chern [mass]      QWZ Chern number            ║
 ║     ablation          EGATL ablation comparison   ║
+║     ssh [n_cells]     SSH scalar chain             ║
+║     flux [nx] [ny]    2D scalar flux lattice       ║
+║     kitaev [n_sites]  Kitaev chain (Majorana)      ║
+║     haldane [nx] [ny] Haldane honeycomb            ║
+║     ricemele [n]      Rice–Mele chain              ║
 ║     benchmark         Leaderboard equation tests  ║
 ║     famous            14 Famous Equations (PL)    ║
 ║     core              14 Core Equations            ║
 ║     cosmo             Cosmological calculator      ║
+║     cmb               CMB evidence analysis        ║
 ║     quit / exit       Exit                        ║
 ╚══════════════════════════════════════════════════╝
 """)
@@ -487,9 +654,50 @@ def repl():
         elif cmd == "cosmo":
             cmd_cosmo(args)
 
+        elif cmd == "cmb":
+            cmd_cmb(args)
+
+        elif cmd == "ssh":
+            args.n_cells = int(parts[1]) if len(parts) > 1 else 20
+            args.T = float(parts[2]) if len(parts) > 2 else 60.0
+            args.seed = 0
+            args.ablation = len(parts) > 1 and parts[-1] == "ablation"
+            cmd_ssh(args)
+
+        elif cmd == "flux":
+            args.nx = int(parts[1]) if len(parts) > 1 else 8
+            args.ny = int(parts[2]) if len(parts) > 2 else 8
+            args.T = 80.0
+            args.seed = 0
+            args.sweep = len(parts) > 1 and parts[-1] == "sweep"
+            cmd_flux(args)
+
+        elif cmd == "kitaev":
+            args.n_sites = int(parts[1]) if len(parts) > 1 else 20
+            args.T = float(parts[2]) if len(parts) > 2 else 60.0
+            args.seed = 0
+            args.ablation = len(parts) > 1 and parts[-1] == "ablation"
+            cmd_kitaev(args)
+
+        elif cmd == "haldane":
+            args.nx = int(parts[1]) if len(parts) > 1 else 6
+            args.ny = int(parts[2]) if len(parts) > 2 else 6
+            args.T = 60.0
+            args.seed = 0
+            args.ablation = len(parts) > 1 and parts[-1] == "ablation"
+            cmd_haldane(args)
+
+        elif cmd == "ricemele":
+            args.n_cells = int(parts[1]) if len(parts) > 1 else 20
+            args.T = 60.0
+            args.seed = 0
+            args.ablation = len(parts) > 1 and parts[-1] == "ablation"
+            args.sweep = len(parts) > 1 and parts[-1] == "sweep"
+            cmd_ricemele(args)
+
         else:
             print(f"  Unknown command: {cmd}")
-            print("  Try: seeds, knot, hopf, energy, pack, egatl, chern, ablation, benchmark, famous, core, cosmo, quit")
+            print("  Try: seeds, knot, hopf, energy, pack, egatl, chern, ablation, ssh, flux, kitaev, haldane, ricemele, benchmark, famous, core, cosmo, cmb, quit")
 
 
 # ---- CLI entry point -------------------------------------------------------
@@ -582,6 +790,44 @@ def main():
     # cmb
     sub.add_parser("cmb", help="CMB evidence analysis")
 
+    # ssh
+    p_ssh = sub.add_parser("ssh", help="SSH scalar chain benchmark")
+    p_ssh.add_argument("--n-cells", type=int, default=20)
+    p_ssh.add_argument("--T", type=float, default=60.0)
+    p_ssh.add_argument("--seed", type=int, default=0)
+    p_ssh.add_argument("--ablation", action="store_true")
+
+    # flux
+    p_flux = sub.add_parser("flux", help="2D scalar flux lattice / Hofstadter")
+    p_flux.add_argument("--nx", type=int, default=8)
+    p_flux.add_argument("--ny", type=int, default=8)
+    p_flux.add_argument("--T", type=float, default=80.0)
+    p_flux.add_argument("--seed", type=int, default=0)
+    p_flux.add_argument("--sweep", action="store_true")
+
+    # kitaev
+    p_kit = sub.add_parser("kitaev", help="Kitaev chain Majorana benchmark")
+    p_kit.add_argument("--n-sites", type=int, default=20)
+    p_kit.add_argument("--T", type=float, default=60.0)
+    p_kit.add_argument("--seed", type=int, default=0)
+    p_kit.add_argument("--ablation", action="store_true")
+
+    # haldane
+    p_hal = sub.add_parser("haldane", help="Haldane honeycomb lattice benchmark")
+    p_hal.add_argument("--nx", type=int, default=6)
+    p_hal.add_argument("--ny", type=int, default=6)
+    p_hal.add_argument("--T", type=float, default=60.0)
+    p_hal.add_argument("--seed", type=int, default=0)
+    p_hal.add_argument("--ablation", action="store_true")
+
+    # ricemele
+    p_rm = sub.add_parser("ricemele", help="Rice-Mele chain benchmark")
+    p_rm.add_argument("--n-cells", type=int, default=20)
+    p_rm.add_argument("--T", type=float, default=60.0)
+    p_rm.add_argument("--seed", type=int, default=0)
+    p_rm.add_argument("--ablation", action="store_true")
+    p_rm.add_argument("--sweep", action="store_true")
+
     args = parser.parse_args()
     cmd = args.command
 
@@ -611,6 +857,16 @@ def main():
         cmd_cosmo(args)
     elif cmd == "cmb":
         cmd_cmb(args)
+    elif cmd == "ssh":
+        cmd_ssh(args)
+    elif cmd == "flux":
+        cmd_flux(args)
+    elif cmd == "kitaev":
+        cmd_kitaev(args)
+    elif cmd == "haldane":
+        cmd_haldane(args)
+    elif cmd == "ricemele":
+        cmd_ricemele(args)
     else:
         repl()
 

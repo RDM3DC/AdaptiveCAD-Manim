@@ -41,6 +41,11 @@ from .egatl import (
     compare_ablations,
     summarize_recovery,
 )
+from . import ssh
+from . import scalar_flux
+from . import kitaev
+from . import haldane
+from . import rice_mele
 
 __all__ = [
     "E8Seeds",
@@ -69,6 +74,12 @@ __all__ = [
     "run_recovery_protocol",
     "compare_ablations",
     "summarize_recovery",
+    # Scalar benchmarks
+    "ssh",
+    "scalar_flux",
+    "kitaev",
+    "haldane",
+    "rice_mele",
     # Famous equations
     "run_famous",
     # Core equations

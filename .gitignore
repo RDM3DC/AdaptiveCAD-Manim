@@ -31,3 +31,14 @@ Thumbs.db
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# Local run artifacts
+*_stderr.txt
+*_stdout.txt
+_render*.txt
+_render*.py
+_check_*.txt
+_check_*.py
+render_*.txt
+New folder/
+*.archived
