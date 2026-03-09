@@ -1,0 +1,48 @@
+{
+  "overall": "PASS",
+  "tests_passed": 5,
+  "tests_total": 5,
+  "details": [
+    {
+      "test": "determinism",
+      "passed": true,
+      "boundary_fraction_exact": true,
+      "total_current_exact": true,
+      "final_g_exact": true
+    },
+    {
+      "test": "current_conservation",
+      "passed": true,
+      "ratio_consistency": true,
+      "non_negative_currents": true,
+      "max_ratio_error": 0.0
+    },
+    {
+      "test": "phase_lift_clipping",
+      "passed": true,
+      "theta_finite": true,
+      "coherence_bounded": true,
+      "pi_bounded": true,
+      "max_abs_theta_R": 490.6337894936355,
+      "coherence_range": [
+        0.9999368491814438,
+        1.0000000000000002
+      ]
+    },
+    {
+      "test": "solver_cross_validation",
+      "passed": true,
+      "gmres_failures": 0,
+      "flux_Yeff_recovery_ratio": 44.21463450561277,
+      "arp_full_boundary_fraction": 0.48088247254856975,
+      "arp_principal_boundary_fraction": 0.8695499372166107,
+      "arp_coherence_gap": 0.5621591542930087,
+      "flux_Yeff_gap": -3.375077994860476e-14
+    },
+    {
+      "test": "lattice_symmetry",
+      "passed": true,
+      "row_symmetry_max_error": 0.004666194007826474
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "submission": "Adaptive Chern Self-Healing Conductance Law \u2014 Verified Benchmark Release",
+  "timestamp": "2026-03-09T01:55:33.880564+00:00",
+  "git_hash": "17be1d4f41acf626afcad0289aec9c7268aed152",
+  "python_version": "3.13.2 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 18:49:14) [MSC v.1929 64 bit (AMD64)]",
+  "overall": "PASS",
+  "stages": {
+    "recovery_demo": {
+      "passed": true,
+      "returncode": 0,
+      "elapsed_s": 2.53,
+      "stdout_tail": "[done] wrote recovery demo artifacts to: outputs\\recovery_demo\n",
+      "stderr_tail": ""
+    },
+    "matched_present": {
+      "passed": true,
+      "returncode": 0,
+      "elapsed_s": 1.68,
+      "stdout_tail": "[done] wrote matched-present artifacts to: outputs\\matched_present\n",
+      "stderr_tail": ""
+    },
+    "solver_verification": {
+      "passed": true,
+      "returncode": 0,
+      "elapsed_s": 1.95,
+      "stdout_tail": "  Running check_determinism... PASS\n  Running check_current_conservation... PASS\n  Running check_phase_lift_clipping... PASS\n  Running check_solver_cross_validate... PASS\n  Running check_lattice_symmetry... PASS\n\n  Verdict: PASS (5/5)\n  Wrote: outputs\\solver_verification\\verdict.json\n",
+      "stderr_tail": ""
+    },
+    "onset_map": {
+      "passed": true,
+      "returncode": 0,
+      "elapsed_s": 17.53,
+      "stdout_tail": "  Sweep 1: alpha0 vs lambda_s\n    6/64\n    12/64\n    18/64\n    24/64\n    30/64\n    36/64\n    42/64\n    48/64\n    54/64\n    60/64\n  Sweep 2: chi vs damage_scale\n    6/64\n    12/64\n    18/64\n    24/64\n    30/64\n    36/64\n    42/64\n    48/64\n    54/64\n    60/64\n\n  Onset map artifacts written to: outputs\\onset_map\n    alpha0_vs_lambda_s: recovery_fraction=0.44, bf_range=[0.412, 0.942]\n    chi_vs_damage_scale: recovery_fraction=0.59, bf_range=[0.423, 0.991]\n",
+      "stderr_tail": ""
+    }
+  },
+  "artifacts": [
+    {
+      "path": "outputs\\matched_present\\matched_present_summary.csv",
+      "size_bytes": 488,
+      "sha256": "0bb397b4171b9195292739e050a4b7c302eaf95f0925cabd4d2a99da54a87348"
+    },
+    {
+      "path": "outputs\\matched_present\\matched_present_summary.json",
+      "size_bytes": 1092,
+      "sha256": "700662d6e6ff0cd07a2196d1759848354074f2c3634ec4da931d2c4a0fb6645c"
+    },
+    {
+      "path": "outputs\\matched_present\\matched_present_traces.png",
+      "size_bytes": 188316,
+      "sha256": "8e3bd821a2f5c6723ab489412ef7c3efbf0e22be4f812685fa471388e85dfc87"
+    },
+    {
+      "path": "outputs\\onset_map\\onset_alpha0_lambda_s.csv",
+      "size_bytes": 1709,
+      "sha256": "87bfd540638ec95fe48e5c2892dea4be43722bf615641c7759ad389ed5a713b3"
+    },
+    {
+      "path": "outputs\\onset_map\\onset_alpha0_lambda_s.png",
+      "size_bytes": 44287,
+      "sha256": "96d039f743280967ee697670ee86cde4037dd73b53bb0b06ee6cd4673c47e098"
+    },
+    {
+      "path": "outputs\\onset_map\\onset_chi_damage_scale.csv",
+      "size_bytes": 1710,
+      "sha256": "cd1b6cdebff4b967692c6f2cf2ef6e284c7473416fbbf2f9a02fdba1000cf02b"
+    },
+    {
+      "path": "outputs\\onset_map\\onset_chi_damage_scale.png",
+      "size_bytes": 40584,
+      "sha256": "f14d8753cd346dd5c5abf2740459d7c5fd555f25e5926109df1bf59023a3ffff"
+    },
+    {
+      "path": "outputs\\onset_map\\summary.json",
+      "size_bytes": 369,
+      "sha256": "9293be34b4f0fefa07a2a31e6cb711b0169a677071daf1c785f37cffc8aca27c"
+    },
+    {
+      "path": "outputs\\recovery_demo\\recovery_traces.csv",
+      "size_bytes": 139715,
+      "sha256": "63de5cc3ca07dc3bf4e754d525a4c42ae4e01560309102bb7c867a0819243690"
+    },
+    {
+      "path": "outputs\\recovery_demo\\recovery_traces.png",
+      "size_bytes": 328075,
+      "sha256": "1a5f460bc85d9e829483a8aa0eaf85a82901ddda7106fe5866b57abb2c0a7335"
+    },
+    {
+      "path": "outputs\\recovery_demo\\snapshot_damaged.png",
+      "size_bytes": 86179,
+      "sha256": "09d29816a2a268248129663df5091a600bf14e44e16b55b65cfcbbca6c69d4a9"
+    },
+    {
+      "path": "outputs\\recovery_demo\\snapshot_healthy.png",
+      "size_bytes": 82153,
+      "sha256": "4575a430d5a517b2e4fadf5e50a1b3eddcaec6675de4d65f908dedd0c26d9609"
+    },
+    {
+      "path": "outputs\\recovery_demo\\snapshot_recovered.png",
+      "size_bytes": 81151,
+      "sha256": "4ff30d0afbd40eb928a8c4ffbcd4fb12bb0c49899936c2c59fff3d7e863627e7"
+    },
+    {
+      "path": "outputs\\recovery_demo\\summary.json",
+      "size_bytes": 1243,
+      "sha256": "51ad4a10ed830d31ef64452346c0601124f732feb40c24748e03a273d9f04b73"
+    },
+    {
+      "path": "outputs\\solver_verification\\verdict.json",
+      "size_bytes": 1250,
+      "sha256": "aee4138761219c0aebfb78862a66c31e582e455541e6d1c1601c99ae0d2e8b56"
+    }
+  ],
+  "artifact_count": 15
+}
