@@ -49,6 +49,31 @@ def recovery_time(
     return float(time[idxs[0]] - t0)
 
 
+def sustained_recovery_time(
+    time: np.ndarray,
+    trace: np.ndarray,
+    t0: float,
+    target_value: float,
+    window_seconds: float,
+) -> float | None:
+    if len(time) < 2:
+        return None
+
+    dt = float(np.median(np.diff(time)))
+    window_steps = max(1, int(np.ceil(window_seconds / max(dt, 1e-12))))
+    post = np.where(time >= t0)[0]
+    if len(post) == 0:
+        return None
+
+    for idx in post:
+        end = idx + window_steps
+        if end > len(trace):
+            break
+        if np.all(trace[idx:end] >= target_value):
+            return float(time[idx] - t0)
+    return None
+
+
 def write_table(path: Path, rows: list[dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if not rows:
@@ -96,6 +121,7 @@ def main() -> None:
     pre_total_ref = float(np.mean(warmup.total_current[pre_mask]))
     pre_boundary_ref = float(np.mean(warmup.boundary_fraction[pre_mask]))
     target_boundary = params.recovery_target_fraction * pre_boundary_ref
+    recovery_window_seconds = max(10.0 * params.dt, 0.60)
 
     branched_results = {}
     rows: list[dict[str, object]] = []
@@ -115,11 +141,19 @@ def main() -> None:
 
         transfer_eff = result.total_current / max(pre_total_ref, 1e-9)
         t_recover = recovery_time(result.time, result.boundary_fraction, t0, target_boundary)
+        t_recover_sustained = sustained_recovery_time(
+            result.time,
+            result.boundary_fraction,
+            t0,
+            target_boundary,
+            recovery_window_seconds,
+        )
 
         rows.append(
             {
                 "variant": variant.name,
                 "recovery_time": t_recover,
+                "rolling_recovery_time": t_recover_sustained,
                 "final_boundary_fraction": float(result.boundary_fraction[-1]),
                 "final_transfer_efficiency": float(transfer_eff[-1]),
                 "final_edge_bulk_ratio": float(result.edge_bulk_ratio[-1]),

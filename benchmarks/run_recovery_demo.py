@@ -49,6 +49,31 @@ def recovery_time(
     return float(time[idxs[0]] - damage_time)
 
 
+def sustained_recovery_time(
+    time: np.ndarray,
+    trace: np.ndarray,
+    damage_time: float,
+    target_value: float,
+    window_seconds: float,
+) -> float | None:
+    if len(time) < 2:
+        return None
+
+    dt = float(np.median(np.diff(time)))
+    window_steps = max(1, int(np.ceil(window_seconds / max(dt, 1e-12))))
+    post = np.where(time >= damage_time)[0]
+    if len(post) == 0:
+        return None
+
+    for idx in post:
+        end = idx + window_steps
+        if end > len(trace):
+            break
+        if np.all(trace[idx:end] >= target_value):
+            return float(time[idx] - damage_time)
+    return None
+
+
 def save_csv(path: Path, results: dict[str, dict[str, np.ndarray]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -141,6 +166,7 @@ def main() -> None:
 
     damage_time = params.damage_step * params.dt
     target_boundary = params.recovery_target_fraction * pre_boundary_ref
+    recovery_window_seconds = max(10.0 * params.dt, 0.60)
 
     results_for_export: dict[str, dict[str, np.ndarray]] = {}
     summary: dict[str, object] = {
@@ -148,12 +174,20 @@ def main() -> None:
         "pre_total_ref": pre_total_ref,
         "pre_boundary_ref": pre_boundary_ref,
         "target_boundary_fraction": target_boundary,
+        "rolling_window_seconds": recovery_window_seconds,
         "variants": {},
     }
 
     for name, result in raw_results.items():
         transfer_efficiency = result.total_current / max(pre_total_ref, 1e-9)
         t_recover = recovery_time(result.time, result.boundary_fraction, damage_time, target_boundary)
+        t_recover_sustained = sustained_recovery_time(
+            result.time,
+            result.boundary_fraction,
+            damage_time,
+            target_boundary,
+            recovery_window_seconds,
+        )
 
         results_for_export[name] = {
             "time": result.time,
@@ -165,6 +199,7 @@ def main() -> None:
 
         summary["variants"][name] = {
             "recovery_time": t_recover,
+            "rolling_recovery_time": t_recover_sustained,
             "final_boundary_fraction": float(result.boundary_fraction[-1]),
             "final_transfer_efficiency": float(transfer_efficiency[-1]),
             "final_edge_bulk_ratio": float(result.edge_bulk_ratio[-1]),

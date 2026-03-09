@@ -81,7 +81,7 @@ This repo also contains the **Adaptive Chern Self-Healing Conductance Law (EGATL
 
 ```bash
 pip install -e .                               # install arp-topology package
-python benchmarks/run_full_pipeline.py         # run all 4 stages → outputs/manifest.json
+python benchmarks/run_full_pipeline.py         # run all 5 stages → outputs/manifest.json
 ```
 
 ### Benchmark stages
@@ -92,6 +92,7 @@ python benchmarks/run_full_pipeline.py         # run all 4 stages → outputs/ma
 | Matched-present | `benchmarks/run_matched_present.py` | Ablation from shared snapshot |
 | Solver verification | `benchmarks/run_solver_verification.py` | 5/5 PASS verdict |
 | Onset maps | `benchmarks/run_onset_map.py` | 2D parameter sweep heatmaps |
+| Units/Theory | `benchmarks/run_units_and_theory_check.py` | `Units: OK`, `Theory: PASS` verdict |
 
 ### Solver modules
 

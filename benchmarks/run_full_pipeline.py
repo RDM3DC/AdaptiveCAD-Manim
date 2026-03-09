@@ -4,8 +4,9 @@ Steps:
   1. Recovery demo  (4 variants, damage → recovery)
   2. Matched-present ablation (shared snapshot)
   3. Solver verification (5 checks)
-  4. Onset-map sweeps (alpha0×lambda_s, chi×damage_scale)
-  5. Write manifest.json with timestamps, git hash, all output paths.
+    4. Onset-map sweeps (alpha0×lambda_s, chi×damage_scale)
+    5. Units/theory verification (normalized consistency + directional trends)
+    6. Write manifest.json with timestamps, git hash, all output paths.
 
 Usage:
     python benchmarks/run_full_pipeline.py
@@ -28,6 +29,7 @@ SCRIPTS = [
     ("matched_present",      ROOT / "benchmarks" / "run_matched_present.py"),
     ("solver_verification",  ROOT / "benchmarks" / "run_solver_verification.py"),
     ("onset_map",            ROOT / "benchmarks" / "run_onset_map.py"),
+    ("units_theory",         ROOT / "benchmarks" / "run_units_and_theory_check.py"),
 ]
 
 

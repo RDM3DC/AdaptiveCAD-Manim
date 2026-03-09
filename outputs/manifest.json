@@ -1,7 +1,7 @@
 {
   "submission": "Adaptive Chern Self-Healing Conductance Law \u2014 Verified Benchmark Release",
-  "timestamp": "2026-03-09T02:09:12.695459+00:00",
-  "git_hash": "edc34448fea5c0f6dae28cd11cd5dde5d4941da2",
+  "timestamp": "2026-03-09T02:27:07.338268+00:00",
+  "git_hash": "56040ebc5f1ce271c4deda8544835557dd3ac7ef",
   "python_version": "3.13.2 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 18:49:14) [MSC v.1929 64 bit (AMD64)]",
   "overall": "PASS",
   "stages": {
@@ -15,40 +15,47 @@
     "matched_present": {
       "passed": true,
       "returncode": 0,
-      "elapsed_s": 1.65,
+      "elapsed_s": 1.72,
       "stdout_tail": "[done] wrote matched-present artifacts to: outputs\\matched_present\n",
       "stderr_tail": ""
     },
     "solver_verification": {
       "passed": true,
       "returncode": 0,
-      "elapsed_s": 1.92,
+      "elapsed_s": 2.03,
       "stdout_tail": "  Running check_determinism... PASS\n  Running check_current_conservation... PASS\n  Running check_phase_lift_clipping... PASS\n  Running check_solver_cross_validate... PASS\n  Running check_lattice_symmetry... PASS\n\n  Verdict: PASS (5/5)\n  Wrote: outputs\\solver_verification\\verdict.json\n",
       "stderr_tail": ""
     },
     "onset_map": {
       "passed": true,
       "returncode": 0,
-      "elapsed_s": 13.61,
+      "elapsed_s": 13.7,
       "stdout_tail": "  Sweep 1: alpha0 vs lambda_s\n    6/64\n    12/64\n    18/64\n    24/64\n    30/64\n    36/64\n    42/64\n    48/64\n    54/64\n    60/64\n  Sweep 2: chi vs damage_scale\n    6/64\n    12/64\n    18/64\n    24/64\n    30/64\n    36/64\n    42/64\n    48/64\n    54/64\n    60/64\n\n  Onset map artifacts written to: outputs\\onset_map\n    alpha0_vs_lambda_s: recovery_fraction=0.44, bf_range=[0.412, 0.942]\n    chi_vs_damage_scale: recovery_fraction=0.59, bf_range=[0.423, 0.991]\n",
+      "stderr_tail": ""
+    },
+    "units_theory": {
+      "passed": true,
+      "returncode": 0,
+      "elapsed_s": 1.04,
+      "stdout_tail": "  Units: OK\n  Theory: PASS\n  Overall: PASS\n  Wrote: outputs\\units_theory\\verdict.json\n",
       "stderr_tail": ""
     }
   },
   "artifacts": [
     {
       "path": "outputs\\manifest.json",
-      "size_bytes": 4819,
-      "sha256": "902dc8c96f448aa6242c5ee3bcb290c77a027eb94ea588917baf7f149dba01df"
+      "size_bytes": 5413,
+      "sha256": "9312e4b446619eab3248caf9a42e318f8d21751f053fdfd854fbf239cf9755a8"
     },
     {
       "path": "outputs\\matched_present\\matched_present_summary.csv",
-      "size_bytes": 488,
-      "sha256": "0bb397b4171b9195292739e050a4b7c302eaf95f0925cabd4d2a99da54a87348"
+      "size_bytes": 514,
+      "sha256": "b23cec3db250c951b8260c16b72bd882e5be38289613a6c0a0042f1579f521fc"
     },
     {
       "path": "outputs\\matched_present\\matched_present_summary.json",
-      "size_bytes": 1092,
-      "sha256": "700662d6e6ff0cd07a2196d1759848354074f2c3634ec4da931d2c4a0fb6645c"
+      "size_bytes": 1236,
+      "sha256": "19857c82fd0a9f3536ef8004e12fe51b1d65d62277e0ade2657a2413e89d6c61"
     },
     {
       "path": "outputs\\matched_present\\matched_present_traces.png",
@@ -107,14 +114,19 @@
     },
     {
       "path": "outputs\\recovery_demo\\summary.json",
-      "size_bytes": 1243,
-      "sha256": "51ad4a10ed830d31ef64452346c0601124f732feb40c24748e03a273d9f04b73"
+      "size_bytes": 1429,
+      "sha256": "b827239e461bf96ddad661d2bbb698c10db92284a64933864dab9deba3ce3c43"
     },
     {
       "path": "outputs\\solver_verification\\verdict.json",
       "size_bytes": 1250,
       "sha256": "aee4138761219c0aebfb78862a66c31e582e455541e6d1c1601c99ae0d2e8b56"
+    },
+    {
+      "path": "outputs\\units_theory\\verdict.json",
+      "size_bytes": 1312,
+      "sha256": "22c7e43f9eec081ee189cef0b0ca08ef9a81011c4c0d1efbcbf632dcf75fb4ad"
     }
   ],
-  "artifact_count": 16
+  "artifact_count": 17
 }

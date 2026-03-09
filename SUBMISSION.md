@@ -3,7 +3,7 @@
 **Submission name:** Adaptive Chern Self-Healing Conductance Law  
 **Version:** 1.0.0  
 **Repository:** [github.com/RDM3DC/AdaptiveCAD-Manim](https://github.com/RDM3DC/AdaptiveCAD-Manim)  
-**Commit:** `f2738ba`  
+**Commit:** See `outputs/manifest.json` for the current git hash.  
 **Date:** 2026-03-09  
 
 ---
@@ -44,21 +44,23 @@ where:
 
 Damage applied at step 170 (t = 5.1 s), scale = 0.14.
 
-| Variant | Boundary Fraction | Edge/Bulk Ratio | Coherence | Recovery Time |
-|---------|:-:|:-:|:-:|:-:|
-| **full_law** | 0.481 | 1.015 | **0.9999** | — |
-| principal_branch | **0.870** | **9.334** | 0.438 | **2.46 s** |
-| no_topology_feedback | 0.478 | 1.003 | 1.000 | — |
-| fixed_ruler | 0.485 | 1.049 | 1.000 | — |
+| Variant | Boundary Fraction | Edge/Bulk Ratio | Coherence | First-Hit Recovery | Rolling Recovery (0.6 s) |
+|---------|:-:|:-:|:-:|:-:|:-:|
+| **full_law** | 0.481 | 1.015 | **0.9999** | — | — |
+| principal_branch | **0.870** | **9.334** | 0.438 | **2.46 s** | **2.46 s** |
+| no_topology_feedback | 0.478 | 1.003 | 1.000 | — | — |
+| fixed_ruler | 0.485 | 1.049 | 1.000 | — | — |
 
 ### 2.2 Matched-Present Ablation (shared damaged snapshot)
 
-| Variant | Boundary Fraction | Edge/Bulk Ratio | Recovery Time |
-|---------|:-:|:-:|:-:|
-| **full_law** | 0.481 | 1.015 | — |
-| principal_branch | 0.755 | 3.213 | **9.0 s** |
-| no_topology_feedback | 0.478 | 1.006 | — |
-| fixed_ruler | 0.485 | 1.048 | — |
+| Variant | Boundary Fraction | Edge/Bulk Ratio | First-Hit Recovery | Rolling Recovery (0.6 s) |
+|---------|:-:|:-:|:-:|:-:|
+| **full_law** | 0.481 | 1.015 | — | — |
+| principal_branch | 0.755 | 3.213 | **9.0 s** | — |
+| no_topology_feedback | 0.478 | 1.006 | — | — |
+| fixed_ruler | 0.485 | 1.048 | — | — |
+
+The rolling-window metric is stricter than the old first-hit metric: it requires the boundary fraction to stay above target for a sustained 0.6 s window. Under this criterion, the matched-present principal-branch run does not count as recovered.
 
 ### 2.3 Solver Verification — 5/5 PASS
 
@@ -77,6 +79,13 @@ Damage applied at step 170 (t = 5.1 s), scale = 0.14.
 | $\alpha_0 \times \lambda_s$ | 43.8% | [0.412, 0.942] |
 | $\chi \times \text{damage\_scale}$ | 59.4% | [0.423, 0.991] |
 
+### 2.5 Units/Theory Verification
+
+| Check | Result | Key Metric |
+|-------|:------:|------------|
+| Units | OK | normalized, finite, bounded $dt\,dg$ increment |
+| Theory | PASS | $\chi_\text{high} > \chi_\text{low}$, $\alpha_{0,\text{high}} > \alpha_{0,\text{low}}$, damage and suppression act in the expected direction |
+
 ---
 
 ## 3. Reproducing Results
@@ -94,9 +103,10 @@ python benchmarks/run_recovery_demo.py        # → outputs/recovery_demo/
 python benchmarks/run_matched_present.py       # → outputs/matched_present/
 python benchmarks/run_solver_verification.py   # → outputs/solver_verification/
 python benchmarks/run_onset_map.py             # → outputs/onset_map/
+python benchmarks/run_units_and_theory_check.py  # → outputs/units_theory/
 ```
 
-### Run full pipeline (all 4 stages + manifest)
+### Run full pipeline (all 5 stages + manifest)
 
 ```bash
 python benchmarks/run_full_pipeline.py         # → outputs/manifest.json
@@ -106,7 +116,7 @@ All benchmarks are deterministic (seed=7). The full pipeline produces `outputs/m
 
 ---
 
-## 4. Output Artifacts (15 files)
+## 4. Output Artifacts (17 files)
 
 | Directory | Files | Description |
 |-----------|-------|-------------|
@@ -114,6 +124,7 @@ All benchmarks are deterministic (seed=7). The full pipeline produces `outputs/m
 | `outputs/matched_present/` | `matched_present_summary.csv`, `.json`, `matched_present_traces.png` | Ablation from shared damaged state |
 | `outputs/onset_map/` | 2× CSV, 2× PNG, `summary.json` | $\alpha_0 \times \lambda_s$ and $\chi \times \text{damage\_scale}$ sweeps |
 | `outputs/solver_verification/` | `verdict.json` | 5-test verification suite |
+| `outputs/units_theory/` | `verdict.json` | Units: OK, Theory: PASS artifact |
 | `outputs/` | `manifest.json` | Pipeline manifest with SHA256 hashes |
 
 ---
@@ -138,6 +149,7 @@ benchmarks/                ← deterministic benchmark scripts
     run_matched_present.py
     run_solver_verification.py
     run_onset_map.py
+    run_units_and_theory_check.py
     run_full_pipeline.py
 
 outputs/                   ← reproducible artifacts (CSV, JSON, PNG)
