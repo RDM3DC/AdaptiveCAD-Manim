@@ -70,3 +70,36 @@ Colour-gradient path for G-code / CNC visualisation.
 - For 3D scenes, inherit from `ThreeDScene` and call `set_camera_orientation()`.
 - `MorphBetweenSDFs` is compute-heavy; lower `resolution` and `keyframes` for faster previews.
 - If AdaptiveCAD is not installed, the examples fall back to pure-Manim stand-ins.
+
+---
+
+## EGATL Benchmark Suite
+
+This repo also contains the **Adaptive Chern Self-Healing Conductance Law (EGATL)** benchmark harness and verified solver modules. See [SUBMISSION.md](SUBMISSION.md) for the full writeup.
+
+### Quick run
+
+```bash
+pip install -e .                               # install arp-topology package
+python benchmarks/run_full_pipeline.py         # run all 4 stages → outputs/manifest.json
+```
+
+### Benchmark stages
+
+| Stage | Script | Output |
+|-------|--------|--------|
+| Recovery demo | `benchmarks/run_recovery_demo.py` | 4-variant damage/recovery traces |
+| Matched-present | `benchmarks/run_matched_present.py` | Ablation from shared snapshot |
+| Solver verification | `benchmarks/run_solver_verification.py` | 5/5 PASS verdict |
+| Onset maps | `benchmarks/run_onset_map.py` | 2D parameter sweep heatmaps |
+
+### Solver modules
+
+| Module | Model |
+|--------|-------|
+| `solver/egatl.py` | Block QWZ (2×2 Nambu) |
+| `solver/scalar_flux.py` | 2D Harper-Hofstadter flux lattice |
+| `solver/ssh.py` | 1D SSH chain |
+| `solver/kitaev.py` | Kitaev p-wave chain |
+| `solver/haldane.py` | Haldane honeycomb lattice |
+| `solver/rice_mele.py` | Rice-Mele chain (Zak phase) |
